@@ -129,16 +129,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
   </div>
 </div>
 
-<!-- Tab 4: Product Image Generation -->
+<!-- Tab 4: Product Image -->
 <div class="panel" id="panel-image">
   <div class="card">
     <label>Describe the image you need</label>
-    <textarea id="imageInput" placeholder="Describe the product image you want — style, background, lighting, angle. Be specific.&#10;&#10;Example: A sleek 20000mAh power bank on a white marble desk, soft natural lighting, next to a laptop and coffee cup, clean professional product photography style, 4K quality"></textarea>
+    <textarea id="imageInput" placeholder="Describe the product image - style, background, lighting. Be specific.&#10;&#10;Example: A sleek power bank on a white marble desk, soft natural lighting, next to a laptop, professional product photography, 4K"></textarea>
     <div class="row">
       <div class="half"><label>Style</label><select id="imageStyle"><option value="product">Product Photography</option><option value="lifestyle">Lifestyle Scene</option><option value="minimal">Minimal White Background</option><option value="studio">Studio Lighting</option></select></div>
       <div class="half"><label>Aspect Ratio</label><select id="imageRatio"><option value="1024*1024">Square 1:1</option><option value="1280*720">Landscape 16:9</option><option value="720*1280">Portrait 9:16</option></select></div>
     </div>
-    <button class="btn btn-gold" onclick="genImage()">🎨 Generate Image →</button>
+    <button class="btn btn-gold" onclick="genImage()">Generate Image</button>
     <div class="output-box" id="imageOutput" style="text-align:center"></div>
   </div>
 </div>
@@ -154,7 +154,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
     <div class="row" style="margin-top:12px">
       <div class="half"><label>Garment Type</label><select id="tryonType"><option value="top">Top (upper body)</option><option value="bottom">Bottom (lower body)</option><option value="dress">Dress / Jumpsuit</option></select></div>
     </div>
-    <button class="btn btn-gold" onclick="genTryon()">👗 Generate Try-On →</button>
+    <button class="btn btn-gold" onclick="genTryon()">Generate Try-On</button>
     <div class="output-box" id="tryonOutput" style="text-align:center"></div>
     <div class="copy-bar" id="tryonCopyBar"><a id="tryonDownload" href="#" download style="color:#f59e0b;font-weight:700">Download Image</a></div>
   </div>
@@ -172,7 +172,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
 var i18n={
 en:{
   heroTitle:'EcomAI', heroSub:'Free AI toolkit for e-commerce sellers — any platform, any language',
-  tab1:'📝 Listing Generator', tab2:'🔍 Review Analyzer', tab3:'📧 Customer Email', tab4:'🎨 Product Image',
+  tab1:'📝 Listing Generator', tab2:'🔍 Review Analyzer', tab3:'📧 Customer Email',
   listingLabel:'Describe your product',
   listingPH:'Describe your product clearly — features, selling points, what makes it different.\n\nExample: 20000mAh power bank with 65W USB-C fast charging, LED battery display, 30% lighter than competitors, ideal for business travelers',
   platformLabel:'Platform', outputLabel:'Output Language',
@@ -188,13 +188,6 @@ en:{
   usageFree:'Free:', usageUsed:'/', usageUnlimited:'Unlimited:',
   generating:'Generating...', errorGen:'Error generating. Please try again.', errorNet:'Network error. Please retry.',
   toastDesc:'Please describe your product first', toastReview:'Please enter at least one review', toastEmail:'Please describe the situation first', toastLimit:'Free uses exhausted. $19/mo for unlimited.', toastCopy:'Copied!',
-  imageLabel:'描述你需要的图片', imagePH:'详细描述产品图片 — 风格、背景、光线、角度。越具体越好。
-
-例如：20000mAh充电宝放在白色大理石桌面，柔和自然光，旁边有笔记本电脑和咖啡杯，专业产品摄影风格，4K画质',
-  imageStyle:'风格', imageRatio:'比例', genImageBtn:'🎨 生成图片 →',
-
-  imageLabel:'Describe the image you need', imagePH:'Describe the product image — style, background, lighting. Be specific.\n\nExample: A sleek power bank on a white marble desk, soft natural lighting, next to a laptop, professional product photography, 4K',
-  imageStyle:'Style', imageRatio:'Aspect Ratio', genImageBtn:'🎨 Generate Image →',
   footer:'EcomAI — Free AI toolkit for sellers', feedback:'Feedback'
 },
 zh:{
@@ -215,11 +208,6 @@ zh:{
   usageFree:'免费：', usageUsed:'/', usageUnlimited:'升级无限：',
   generating:'生成中...', errorGen:'生成失败，请重试', errorNet:'网络错误，请重试',
   toastDesc:'请先描述产品', toastReview:'请至少输入一条评价', toastEmail:'请描述客户场景', toastLimit:'免费次数用完，$19/月升级无限使用', toastCopy:'已复制！',
-  imageLabel:'Describe la imagen que necesitas', imagePH:'Describe la imagen del producto — estilo, fondo, iluminación. Sé específico.
-
-Ejemplo: Power bank elegante sobre escritorio de mármol blanco, luz natural suave, junto a laptop, fotografía profesional, 4K',
-  imageStyle:'Estilo', imageRatio:'Proporción', genImageBtn:'🎨 Generar Imagen →',
-
   footer:'EcomAI — 卖家免费AI工具箱', feedback:'反馈'
 },
 es:{
@@ -240,11 +228,6 @@ es:{
   usageFree:'Gratis:', usageUsed:'/', usageUnlimited:'Ilimitado:',
   generating:'Generando...', errorGen:'Error al generar. Inténtalo de nuevo.', errorNet:'Error de red. Reintenta.',
   toastDesc:'Por favor describe tu producto', toastReview:'Ingresa al menos una reseña', toastEmail:'Describe la situación', toastLimit:'Límite gratuito alcanzado. $19/mes por ilimitado.', toastCopy:'¡Copiado!',
-  imageLabel:'Beschreibe das benötigte Bild', imagePH:'Beschreibe das Produktbild — Stil, Hintergrund, Beleuchtung. Sei präzise.
-
-Beispiel: Schlanke Powerbank auf weißem Marmortisch, sanftes natürliches Licht, neben Laptop, professionelle Produktfotografie, 4K',
-  imageStyle:'Stil', imageRatio:'Seitenverhältnis', genImageBtn:'🎨 Bild generieren →',
-
   footer:'EcomAI — Kit IA gratuito para vendedores', feedback:'Comentarios'
 },
 de:{
@@ -264,11 +247,6 @@ de:{
   writeBtn:'E-Mail schreiben →',
   usageFree:'Kostenlos:', usageUsed:'/', usageUnlimited:'Unbegrenzt:',
   generating:'Generiere...', errorGen:'Fehler bei Generierung.', errorNet:'Netzwerkfehler.', toastDesc:'Bitte Produkt beschreiben', toastReview:'Mindestens eine Bewertung eingeben', toastEmail:'Bitte Situation beschreiben', toastLimit:'Kostenlose Nutzung erschöpft. $19/Monat unbegrenzt.', toastCopy:'Kopiert!',
-  imageLabel:'必要な画像を説明', imagePH:'商品画像を説明してください — スタイル、背景、照明。具体的に。
-
-例：白い大理石の机の上にあるスタイリッシュなモバイルバッテリー、柔らかな自然光、ノートPCの隣、プロフェッショナルな商品写真、4K',
-  imageStyle:'スタイル', imageRatio:'アスペクト比', genImageBtn:'🎨 画像生成 →',
-
   footer:'EcomAI — Kostenloses KI-Toolkit', feedback:'Feedback'
 },
 ja:{
@@ -288,11 +266,6 @@ ja:{
   writeBtn:'メール作成 →',
   usageFree:'無料：', usageUsed:'/', usageUnlimited:'無制限：',
   generating:'生成中...', errorGen:'エラーが発生しました', errorNet:'ネットワークエラー', toastDesc:'製品を説明してください', toastReview:'最低1件のレビューを入力', toastEmail:'状況を説明してください', toastLimit:'無料利用回数終了。$19/月で無制限。', toastCopy:'コピーしました！',
-  imageLabel:'필요한 이미지 설명', imagePH:'제품 이미지를 설명하세요 — 스타일, 배경, 조명. 구체적으로.
-
-예: 흰색 대리석 책상 위의 세련된 보조배터리, 부드러운 자연광, 노트북 옆, 전문 제품 사진, 4K',
-  imageStyle:'스타일', imageRatio:'비율', genImageBtn:'🎨 이미지 생성 →',
-
   footer:'EcomAI — 無料AIツールキット', feedback:'フィードバック'
 },
 ko:{
@@ -312,11 +285,6 @@ ko:{
   writeBtn:'이메일 작성 →',
   usageFree:'무료:', usageUsed:'/', usageUnlimited:'무제한:',
   generating:'생성 중...', errorGen:'오류 발생', errorNet:'네트워크 오류', toastDesc:'제품을 설명해주세요', toastReview:'최소 하나의 리뷰를 입력하세요', toastEmail:'상황을 설명해주세요', toastLimit:'무료 사용 횟수 소진. $19/월 무제한.', toastCopy:'복사됨!',
-  imageLabel:'Décrivez l'image souhaitée', imagePH:'Décrivez l'image du produit — style, arrière-plan, éclairage. Soyez précis.
-
-Exemple: Batterie externe élégante sur un bureau en marbre blanc, lumière naturelle douce, à côté d'un ordinateur portable, photo professionnelle, 4K',
-  imageStyle:'Style', imageRatio:'Ratio', genImageBtn:'🎨 Générer Image →',
-
   footer:'EcomAI — 무료 AI 툴킷', feedback:'피드백'
 },
 fr:{
@@ -349,7 +317,7 @@ function switchLang(lang){
   document.querySelector('.hero p').textContent=t.heroSub;
   // Tabs
   var tabs=document.querySelectorAll('.tab');
-  tabs[0].textContent=t.tab1; tabs[1].textContent=t.tab2; tabs[2].textContent=t.tab3; tabs[3].textContent=t.tab4;
+  tabs[0].textContent=t.tab1; tabs[1].textContent=t.tab2; tabs[2].textContent=t.tab3;
   // Listing
   document.querySelector('#panel-listing label').textContent=t.listingLabel;
   document.getElementById('listingInput').placeholder=t.listingPH;
@@ -392,9 +360,9 @@ var savedLang=localStorage.getItem('ecomai_lang')||'en';
 document.getElementById('langSelect').value=savedLang;
 switchLang(savedLang);
 
-var DS_KEY = atob('c2stNDBjNjI5OWE2YWQyNDBiZjg3MGE5MDU0NmZhNzVhODI='); // Encoded — move to backend for production
-var IMG_KEY = atob('c2stYTQ0YTh1OGIwYjhhNGIxZGJmMmM4ZWZiZWRiNWY0NWQ='); // DashScope Seedream
-var TRYON_KEY = atob('c2stNGU0OWJhM2Y3MmU4NDkxZjhiMzkzOGE0NGRjOThlNjQ='); // DashScope Aitryon-Plus
+var DS_KEY = atob('c2stNDBjNjI5OWE2YWQyNDBiZjg3MGE5MDU0NmZhNzVhODI=');
+var IMG_KEY = atob('c2stYTQ0YTh1OGIwYjhhNGIxZGJmMmM4ZWZiZWRiNWY0NWQ=');
+var TRYON_KEY = atob('c2stNGU0OWJhM2Y3MmU4NDkxZjhiMzkzOGE0NGRjOThlNjQ=');
 var FREE_LIMIT = 5;
 
 function getUsage(){return parseInt(localStorage.getItem('ecomai_usage')||'0')}
@@ -447,80 +415,50 @@ function genReview(){
   callAI(prompt,'reviewOutput','reviewCopyBar');
 }
 
-// ===== VIRTUAL TRY-ON =====
-async function genTryon(){
-  var pFile=document.getElementById('tryonPerson').files[0];
-  var gFile=document.getElementById('tryonGarment').files[0];
-  if(!pFile||!gFile){toast('Please upload both model and clothing photos');return}
-  if(!checkLimit()){toast(t('toastLimit'));return}
-  var out=document.getElementById('tryonOutput');
-  out.className='output-box show';out.textContent='Uploading images...';
-
-  try{
-    // Upload both images
-    var fd1=new FormData();fd1.append('file',pFile);
-    var r1=await fetch('https://umxai.cn/api/upload/image',{method:'POST',body:fd1});
-    var u1=await r1.json();
-    var fd2=new FormData();fd2.append('file',gFile);
-    var r2=await fetch('https://umxai.cn/api/upload/image',{method:'POST',body:fd2});
-    var u2=await r2.json();
-    if(!u1.url||!u2.url){out.textContent='Upload failed';return}
-
-    out.textContent='Generating try-on... (this takes ~90 seconds)';
-    var gType=document.getElementById('tryonType').value;
-    var input={person_image_url:u1.url};
-    if(gType==='top'||gType==='dress')input.top_garment_url=u2.url;
-    if(gType==='bottom')input.bottom_garment_url=u2.url;
-
-    // Submit async task
-    var taskR=await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/image2image/image-synthesis/',{
-      method:'POST',headers:{'Authorization':'Bearer '+TRYON_KEY,'Content-Type':'application/json','X-DashScope-Async':'enable'},
-      body:JSON.stringify({model:'aitryon-plus',input:input,parameters:{resolution:-1,restore_face:true}})
-    });
-    var taskJ=await taskR.json();
-    if(!taskJ.output||!taskJ.output.task_id){out.textContent='Task creation failed: '+JSON.stringify(taskJ);return}
-    var tid=taskJ.output.task_id;
-
-    // Poll for result
-    for(var i=0;i<30;i++){
-      await new Promise(function(r){setTimeout(r,4000)});
-      var pollR=await fetch('https://dashscope.aliyuncs.com/api/v1/tasks/'+tid,{headers:{'Authorization':'Bearer '+TRYON_KEY}});
-      var pollJ=await pollR.json();
-      var s=pollJ.output.task_status;
-      if(s==='SUCCEEDED'){
-        out.innerHTML='<img src=\"'+pollJ.output.image_url+'\" style=\"max-width:100%;border-radius:12px\" onload=\"addUsage()\">';
-        document.getElementById('tryonDownload').href=pollJ.output.image_url;
-        document.getElementById('tryonCopyBar').classList.add('show');
-        return;
-      }else if(s==='FAILED'){out.textContent='Generation failed: '+(pollJ.output.message||'');return}
-      out.textContent='Generating try-on... '+(i+1)*4+'s';
-    }
-    out.textContent='Timeout. Please try again.';
-  }catch(e){out.textContent='Error: '+e.message}
-}
-
-// ===== IMAGE GENERATION =====
+// ===== IMAGE + TRY-ON =====
 async function genImage(){
   var desc=document.getElementById('imageInput').value.trim();
-  if(!desc||desc.length<10){toast('Please describe the image you need (at least 10 characters)');return}
+  if(!desc||desc.length<10){toast('Please describe the image (min 10 characters)');return}
   if(!checkLimit()){toast(t('toastLimit'));return}
-  var out=document.getElementById('imageOutput');
-  out.className='output-box show';out.textContent='Generating image... (this takes 10-30 seconds)';
-  var style=document.getElementById('imageStyle').value;
-  var ratio=document.getElementById('imageRatio').value;
-  var fullPrompt=desc+' | Style: '+style+' photography | Professional product shot, 4K, detailed textures, commercial quality';
+  var out=document.getElementById('imageOutput');out.className='output-box show';out.textContent='Generating image...';
+  var style=document.getElementById('imageStyle').value,ratio=document.getElementById('imageRatio').value;
   try{
     var r=await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis',{
       method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+IMG_KEY},
-      body:JSON.stringify({model:'seedream-4.0',input:{messages:[{role:'user',content:[{text:fullPrompt}]}]},parameters:{n:1,size:ratio}})
+      body:JSON.stringify({model:'seedream-4.0',input:{messages:[{role:'user',content:[{text:desc+' | '+style+' photography, 4K, commercial quality'}]}]},parameters:{n:1,size:ratio}})
     });
-    if(r.ok){var j=await r.json();
-      var imgs=[];
-      if(j.output&&j.output.choices){j.output.choices.forEach(function(c){c.message.content.forEach(function(p){if(p.image)imgs.push(typeof p.image==='string'?p.image:p.image.url)})})}
-      if(imgs.length>0){out.innerHTML='<img src=\"'+imgs[0]+'\" style=\"max-width:100%;border-radius:12px\" onload=\"addUsage()\"><br><a href=\"'+imgs[0]+'\" download style=\"display:inline-block;margin-top:12px;color:#f59e0b;font-weight:700\">Download Image</a>';return}
-      out.textContent='No image returned. Try a different description.';
-    }else{out.textContent='Image generation failed. Please retry.'}
-  }catch(e){out.textContent='Network error. Please retry.'}
+    if(r.ok){var j=await r.json();var imgs=[];if(j.output&&j.output.choices){j.output.choices.forEach(function(c){c.message.content.forEach(function(p){if(p.image)imgs.push(typeof p.image==='string'?p.image:p.image.url)})})}
+    if(imgs.length>0){out.innerHTML='<img src=\"'+imgs[0]+'\" style=\"max-width:100%;border-radius:12px\" onload=\"addUsage()\"><br><a href=\"'+imgs[0]+'\" download style=\"color:#f59e0b;font-weight:700;display:inline-block;margin-top:12px\">Download Image</a>';return}
+    out.textContent='No image returned.';}else{out.textContent='Failed. Please retry.'}
+  }catch(e){out.textContent='Error: '+e.message}
+}
+
+async function genTryon(){
+  var pf=document.getElementById('tryonPerson').files[0],gf=document.getElementById('tryonGarment').files[0];
+  if(!pf||!gf){toast('Please upload both photos');return}
+  if(!checkLimit()){toast(t('toastLimit'));return}
+  var out=document.getElementById('tryonOutput');out.className='output-box show';out.textContent='Uploading...';
+  try{
+    var fd1=new FormData();fd1.append('file',pf);var r1=await fetch('https://umxai.cn/api/upload/image',{method:'POST',body:fd1});var u1=await r1.json();
+    var fd2=new FormData();fd2.append('file',gf);var r2=await fetch('https://umxai.cn/api/upload/image',{method:'POST',body:fd2});var u2=await r2.json();
+    if(!u1.url||!u2.url){out.textContent='Upload failed';return}
+    out.textContent='Generating try-on (~90s)...';
+    var gt=document.getElementById('tryonType').value;
+    var inp={person_image_url:u1.url};
+    if(gt==='top'||gt==='dress')inp.top_garment_url=u2.url;
+    if(gt==='bottom')inp.bottom_garment_url=u2.url;
+    var tr=await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/image2image/image-synthesis/',{
+      method:'POST',headers:{'Authorization':'Bearer '+TRYON_KEY,'Content-Type':'application/json','X-DashScope-Async':'enable'},
+      body:JSON.stringify({model:'aitryon-plus',input:inp,parameters:{resolution:-1,restore_face:true}})
+    });var tj=await tr.json();
+    if(!tj.output||!tj.output.task_id){out.textContent='Task failed: '+JSON.stringify(tj);return}
+    for(var i=0;i<30;i++){await new Promise(function(r){setTimeout(r,4000)});
+      var pr=await fetch('https://dashscope.aliyuncs.com/api/v1/tasks/'+tj.output.task_id,{headers:{'Authorization':'Bearer '+TRYON_KEY}});var pj=await pr.json();
+      if(pj.output.task_status==='SUCCEEDED'){out.innerHTML='<img src=\"'+pj.output.image_url+'\" style=\"max-width:100%;border-radius:12px\" onload=\"addUsage()\">';document.getElementById('tryonDownload').href=pj.output.image_url;document.getElementById('tryonCopyBar').classList.add('show');return}
+      else if(pj.output.task_status==='FAILED'){out.textContent='Failed: '+(pj.output.message||'');return}
+      out.textContent='Generating try-on... '+(i+1)*4+'s';
+    }out.textContent='Timeout. Try again.';
+  }catch(e){out.textContent='Error: '+e.message}
 }
 
 function genEmail(){
