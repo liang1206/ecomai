@@ -127,7 +127,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
   </div>
 </div>
 
-<div class="usage-bar">Free: <strong id="usageCount">0</strong> / 10 uses &nbsp;|&nbsp; Unlimited: <strong>$19/mo</strong></div>
+<div class="usage-bar" id="usageBar">Free: <strong id="usageCount">—</strong> / 5 uses &nbsp;|&nbsp; Unlimited: <strong>$19/mo</strong></div>
 
 </div>
 
@@ -331,7 +331,7 @@ var DS_KEY = atob('c2stNDBjNjI5OWE2YWQyNDBiZjg3MGE5MDU0NmZhNzVhODI='); // Encode
 var FREE_LIMIT = 5;
 
 function getUsage(){return parseInt(localStorage.getItem('ecomai_usage')||'0')}
-function addUsage(){var u=getUsage()+1;localStorage.setItem('ecomai_usage',u);document.getElementById('usageCount').textContent=u;updateUsageBar();return u}
+function addUsage(){var u=getUsage()+1;localStorage.setItem('ecomai_usage',u);updateUsageBar();return u}
 function updateUsageBar(){var lang=window._lang||'en';var t2=i18n[lang];document.querySelector('.usage-bar').innerHTML=t2.usageFree+' <strong id=\"usageCount\">'+getUsage()+'</strong> '+t2.usageUsed+' '+FREE_LIMIT+' &nbsp;|&nbsp; '+t2.usageUnlimited+' <strong>$19/mo</strong>';}
 document.getElementById('usageCount').textContent=getUsage();
 function checkLimit(){return getUsage()<FREE_LIMIT}
