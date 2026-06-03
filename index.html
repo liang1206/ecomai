@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EcomAI — AI E-commerce Toolkit</title>
+<meta name="description" content="Free AI tools for e-commerce sellers. Generate product listings, analyze competitor reviews, and write customer emails in any language.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#fefce8;color:#1e293b;line-height:1.6;min-height:100vh}
+.container{max-width:800px;margin:0 auto;padding:40px 20px 60px}
+
+.hero{text-align:center;padding:40px 20px 30px}
+.hero .icon{font-size:42px;display:block;margin-bottom:8px}
+.hero h1{font-size:30px;font-weight:800;color:#92400e}
+.hero p{color:#a16207;font-size:15px;margin-top:4px}
+
+.tabs{display:flex;gap:4px;margin-bottom:24px;background:#fff;border-radius:14px;padding:4px;border:1px solid #fde68a}
+.tab{flex:1;padding:12px 8px;text-align:center;border:none;background:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;color:#78716c;transition:all .15s;font-family:inherit}
+.tab:hover{color:#92400e}
+.tab.active{background:#fef3c7;color:#92400e}
+
+.card{background:#fff;border-radius:16px;padding:28px;border:1px solid #fde68a;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,.03)}
+.card label{display:block;font-size:13px;font-weight:600;color:#78716c;margin-bottom:6px}
+.card textarea,.card input[type=text]{width:100%;padding:14px;border:2px solid #fde68a;border-radius:12px;font-size:15px;background:#fffbeb;font-family:inherit;resize:vertical;outline:none}
+.card textarea:focus,.card input:focus{border-color:#f59e0b;background:#fff}
+.card textarea{min-height:120px}
+.card .row{display:flex;gap:12px;flex-wrap:wrap}
+.card .row .half{flex:1;min-width:200px}
+.card select{width:100%;padding:14px;border:2px solid #fde68a;border-radius:12px;font-size:15px;background:#fffbeb;font-family:inherit;outline:none;cursor:pointer}
+
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;margin-top:12px}
+.btn-gold{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
+.btn-gold:hover{box-shadow:0 6px 20px rgba(245,158,11,.3);transform:translateY(-1px)}
+.btn-gold:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-outline{background:#fff;color:#78716c;border:2px solid #fde68a}
+.btn-outline:hover{background:#fffbf0}
+
+.output-box{background:#faf9f7;border:1px solid #e8e4dc;border-radius:12px;padding:20px;margin-top:16px;display:none;white-space:pre-wrap;font-size:14px;line-height:1.8;max-height:400px;overflow-y:auto}
+.output-box.show{display:block}
+.copy-bar{display:flex;gap:8px;margin-top:12px;display:none}
+.copy-bar.show{display:flex}
+
+.usage-bar{text-align:center;margin-top:16px;font-size:13px;color:#a8a29e}
+.usage-bar strong{color:#f59e0b}
+.panel{display:none}
+.panel.active{display:block}
+
+.footer{text-align:center;color:#a8a29e;font-size:12px;padding:20px}
+.footer a{color:#c4b8a6}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(120px);background:#1e293b;color:#fff;padding:12px 28px;border-radius:30px;font-size:14px;font-weight:600;z-index:999;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* Language Switcher */
+.lang-switch{position:fixed;top:16px;left:16px;z-index:100}
+.lang-switch select{padding:8px 12px;border:2px solid #fde68a;border-radius:10px;background:#fff;font-size:13px;font-family:inherit;cursor:pointer;color:#1e293b;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%23a16207'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:30px}
+.lang-switch select:hover{border-color:#f59e0b}
+
+@media(max-width:600px){.card{padding:20px 14px}.tabs{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+
+<div class="lang-switch">
+  <select id="langSelect" onchange="switchLang(this.value)">
+    <option value="en">English</option>
+    <option value="zh">中文</option>
+    <option value="es">Español</option>
+    <option value="de">Deutsch</option>
+    <option value="ja">日本語</option>
+    <option value="ko">한국어</option>
+    <option value="fr">Français</option>
+  </select>
+</div>
+
+<div class="hero">
+  <span class="icon">🛒</span>
+  <h1>EcomAI</h1>
+  <p>Free AI toolkit for e-commerce sellers — any platform, any language</p>
+</div>
+
+<div class="container">
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('listing')">📝 Listing Generator</button>
+  <button class="tab" onclick="switchTab('review')">🔍 Review Analyzer</button>
+  <button class="tab" onclick="switchTab('email')">📧 Customer Email</button>
+</div>
+
+<!-- Tab 1: Listing -->
+<div class="panel active" id="panel-listing">
+  <div class="card">
+    <label>Describe your product</label>
+    <textarea id="listingInput" placeholder="Describe your product clearly — features, selling points, what makes it different.&#10;&#10;Example: 20000mAh power bank with 65W USB-C fast charging, LED battery display, 30% lighter than competitors, ideal for business travelers"></textarea>
+    <div class="row">
+      <div class="half"><label>Platform</label><select id="listingPlatform"><optgroup label="Global"><option value="amazon">Amazon</option><option value="shopify">Shopify</option><option value="etsy">Etsy</option><option value="ebay">eBay</option></optgroup><optgroup label="Asia"><option value="taobao">Taobao / Tmall</option><option value="jd">JD.com</option><option value="shopee">Shopee</option><option value="lazada">Lazada</option></optgroup></select></div>
+      <div class="half"><label>Output Language</label><select id="listingLang"><option value="en">English</option><option value="zh">中文</option><option value="es">Español</option><option value="de">Deutsch</option><option value="ja">日本語</option><option value="ko">한국어</option></select></div>
+    </div>
+    <button class="btn btn-gold" onclick="genListing()">Generate Listing →</button>
+    <div class="output-box" id="listingOutput"></div>
+    <div class="copy-bar" id="listingCopyBar"><button class="btn btn-outline" onclick="copyText('listingOutput')">📋 Copy</button></div>
+  </div>
+</div>
+
+<!-- Tab 2: Review Analysis -->
+<div class="panel" id="panel-review">
+  <div class="card">
+    <label>Paste competitor reviews</label>
+    <textarea id="reviewInput" placeholder="Paste or type negative reviews from competitors. One per line.&#10;&#10;Example:&#10;Battery died after 3 months&#10;Much heavier than advertised&#10;USB-C port stopped working"></textarea>
+    <button class="btn btn-gold" onclick="genReview()">Analyze Reviews →</button>
+    <div class="output-box" id="reviewOutput"></div>
+    <div class="copy-bar" id="reviewCopyBar"><button class="btn btn-outline" onclick="copyText('reviewOutput')">📋 Copy</button></div>
+  </div>
+</div>
+
+<!-- Tab 3: Customer Email -->
+<div class="panel" id="panel-email">
+  <div class="card">
+    <label>Describe the customer situation</label>
+    <textarea id="emailInput" placeholder="Example: Customer received a damaged product (cracked screen) and wants a refund.&#10;Or: Customer is asking for a bulk discount on 50 units."></textarea>
+    <div class="row">
+      <div class="half"><label>Tone</label><select id="emailTone"><option value="professional">Professional</option><option value="friendly">Friendly</option><option value="apologetic">Apologetic</option></select></div>
+      <div class="half"><label>Language</label><select id="emailLang"><option value="zh">中文</option><option value="en">English</option><option value="es">Español</option><option value="de">Deutsch</option><option value="fr">Français</option></select></div>
+    </div>
+    <button class="btn btn-gold" onclick="genEmail()">Write Email →</button>
+    <div class="output-box" id="emailOutput"></div>
+    <div class="copy-bar" id="emailCopyBar"><button class="btn btn-outline" onclick="copyText('emailOutput')">📋 Copy</button></div>
+  </div>
+</div>
+
+<div class="usage-bar">Free: <strong id="usageCount">0</strong> / 10 uses &nbsp;|&nbsp; Unlimited: <strong>$19/mo</strong></div>
+
+</div>
+
+<div class="footer">EcomAI — Free AI toolkit for sellers &nbsp;|&nbsp; Feedback: <a href="mailto:1353379098@qq.com">1353379098@qq.com</a></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== I18N =====
+var i18n={
+en:{
+  heroTitle:'EcomAI', heroSub:'Free AI toolkit for e-commerce sellers — any platform, any language',
+  tab1:'📝 Listing Generator', tab2:'🔍 Review Analyzer', tab3:'📧 Customer Email',
+  listingLabel:'Describe your product',
+  listingPH:'Describe your product clearly — features, selling points, what makes it different.\n\nExample: 20000mAh power bank with 65W USB-C fast charging, LED battery display, 30% lighter than competitors, ideal for business travelers',
+  platformLabel:'Platform', outputLabel:'Output Language',
+  globalOpt:'Global', asiaOpt:'Asia',
+  genBtn:'Generate Listing →', copyBtn:'📋 Copy',
+  reviewLabel:'Paste competitor reviews',
+  reviewPH:'Paste or type negative reviews from competitors. One per line.\n\nExample:\nBattery died after 3 months\nMuch heavier than advertised\nUSB-C port stopped working',
+  analyzeBtn:'Analyze Reviews →',
+  emailLabel:'Describe the customer situation',
+  emailPH:'Example: Customer received a damaged product (cracked screen) and wants a refund.\nOr: Customer is asking for a bulk discount on 50 units.',
+  toneLabel:'Tone', toneProf:'Professional', toneFriend:'Friendly', toneApolog:'Apologetic',
+  writeBtn:'Write Email →',
+  usageFree:'Free:', usageUsed:'/', usageUnlimited:'Unlimited:',
+  generating:'Generating...', errorGen:'Error generating. Please try again.', errorNet:'Network error. Please retry.',
+  toastDesc:'Please describe your product first', toastReview:'Please enter at least one review', toastEmail:'Please describe the situation first', toastLimit:'Free uses exhausted. $19/mo for unlimited.', toastCopy:'Copied!',
+  footer:'EcomAI — Free AI toolkit for sellers', feedback:'Feedback'
+},
+zh:{
+  heroTitle:'EcomAI', heroSub:'电商卖家免费AI工具箱 — 全平台、多语言',
+  tab1:'📝 Listing 生成', tab2:'🔍 差评分析', tab3:'📧 客服邮件',
+  listingLabel:'描述你的产品',
+  listingPH:'写清楚产品是什么、有什么特点、卖点在哪。\n\n例如：20000mAh充电宝，65W快充，LED电量显示，比同类轻30%，适合出差旅行',
+  platformLabel:'平台', outputLabel:'输出语言',
+  globalOpt:'全球', asiaOpt:'亚洲',
+  genBtn:'生成 Listing →', copyBtn:'📋 复制',
+  reviewLabel:'粘贴竞品差评',
+  reviewPH:'输入竞品差评，一行一条。\n\n例如：\n电池用了三个月就不行了\n比宣传的重很多\nUSB-C接口两周就坏了',
+  analyzeBtn:'分析差评 →',
+  emailLabel:'描述客户场景',
+  emailPH:'例如：客户收到充电宝屏幕裂了，申请退货。\n或者：买家想批量采购50个，问有没有折扣。',
+  toneLabel:'语气', toneProf:'专业正式', toneFriend:'友好亲切', toneApolog:'道歉安抚',
+  writeBtn:'生成邮件 →',
+  usageFree:'免费：', usageUsed:'/', usageUnlimited:'升级无限：',
+  generating:'生成中...', errorGen:'生成失败，请重试', errorNet:'网络错误，请重试',
+  toastDesc:'请先描述产品', toastReview:'请至少输入一条评价', toastEmail:'请描述客户场景', toastLimit:'免费次数用完，$19/月升级无限使用', toastCopy:'已复制！',
+  footer:'EcomAI — 卖家免费AI工具箱', feedback:'反馈'
+},
+es:{
+  heroTitle:'EcomAI', heroSub:'Kit de herramientas IA gratuito para vendedores — cualquier plataforma, cualquier idioma',
+  tab1:'📝 Generador de Listings', tab2:'🔍 Análisis de Reseñas', tab3:'📧 Correo Cliente',
+  listingLabel:'Describe tu producto',
+  listingPH:'Describe tu producto claramente — características, puntos de venta, qué lo hace diferente.\n\nEjemplo: Power bank de 20000mAh con carga rápida USB-C de 65W, pantalla LED, 30% más ligero, ideal para viajeros',
+  platformLabel:'Plataforma', outputLabel:'Idioma de salida',
+  globalOpt:'Global', asiaOpt:'Asia',
+  genBtn:'Generar Listing →', copyBtn:'📋 Copiar',
+  reviewLabel:'Pega reseñas de competidores',
+  reviewPH:'Pega reseñas negativas de competidores. Una por línea.\n\nEjemplo:\nLa batería murió después de 3 meses\nMucho más pesado de lo anunciado',
+  analyzeBtn:'Analizar Reseñas →',
+  emailLabel:'Describe la situación del cliente',
+  emailPH:'Ejemplo: El cliente recibió un producto dañado y quiere un reembolso.\nO: El cliente pide descuento por 50 unidades.',
+  toneLabel:'Tono', toneProf:'Profesional', toneFriend:'Amigable', toneApolog:'De disculpa',
+  writeBtn:'Redactar Correo →',
+  usageFree:'Gratis:', usageUsed:'/', usageUnlimited:'Ilimitado:',
+  generating:'Generando...', errorGen:'Error al generar. Inténtalo de nuevo.', errorNet:'Error de red. Reintenta.',
+  toastDesc:'Por favor describe tu producto', toastReview:'Ingresa al menos una reseña', toastEmail:'Describe la situación', toastLimit:'Límite gratuito alcanzado. $19/mes por ilimitado.', toastCopy:'¡Copiado!',
+  footer:'EcomAI — Kit IA gratuito para vendedores', feedback:'Comentarios'
+},
+de:{
+  heroTitle:'EcomAI', heroSub:'Kostenloses KI-Toolkit für Verkäufer — jede Plattform, jede Sprache',
+  tab1:'📝 Listing Generator', tab2:'🔍 Bewertungsanalyse', tab3:'📧 Kunden-E-Mail',
+  listingLabel:'Beschreibe dein Produkt',
+  listingPH:'Beschreibe dein Produkt — Funktionen, Verkaufsargumente, was es besonders macht.\n\nBeispiel: 20000mAh Powerbank mit 65W USB-C Schnellladung, LED-Anzeige, 30% leichter, ideal für Geschäftsreisende',
+  platformLabel:'Plattform', outputLabel:'Ausgabesprache',
+  globalOpt:'Global', asiaOpt:'Asien',
+  genBtn:'Listing erstellen →', copyBtn:'📋 Kopieren',
+  reviewLabel:'Füge Konkurrenz-Bewertungen ein',
+  reviewPH:'Füge negative Bewertungen von Mitbewerbern ein. Eine pro Zeile.\n\nBeispiel:\nAkku nach 3 Monaten defekt\nViel schwerer als angegeben',
+  analyzeBtn:'Bewertungen analysieren →',
+  emailLabel:'Beschreibe die Kundensituation',
+  emailPH:'Beispiel: Kunde erhielt defektes Produkt und möchte Rückerstattung.\nOder: Kunde fragt nach Mengenrabatt für 50 Stück.',
+  toneLabel:'Ton', toneProf:'Professionell', toneFriend:'Freundlich', toneApolog:'Entschuldigend',
+  writeBtn:'E-Mail schreiben →',
+  usageFree:'Kostenlos:', usageUsed:'/', usageUnlimited:'Unbegrenzt:',
+  generating:'Generiere...', errorGen:'Fehler bei Generierung.', errorNet:'Netzwerkfehler.', toastDesc:'Bitte Produkt beschreiben', toastReview:'Mindestens eine Bewertung eingeben', toastEmail:'Bitte Situation beschreiben', toastLimit:'Kostenlose Nutzung erschöpft. $19/Monat unbegrenzt.', toastCopy:'Kopiert!',
+  footer:'EcomAI — Kostenloses KI-Toolkit', feedback:'Feedback'
+},
+ja:{
+  heroTitle:'EcomAI', heroSub:'無料AIツールキット — あらゆるプラットフォーム、あらゆる言語に対応',
+  tab1:'📝 リスティング生成', tab2:'🔍 レビュー分析', tab3:'📧 顧客メール',
+  listingLabel:'製品の説明',
+  listingPH:'製品を詳しく説明してください — 特徴、セールスポイント、競合との違い。\n\n例：20000mAhモバイルバッテリー、65W USB-C急速充電、LEDディスプレイ、競合より30%軽量、ビジネス旅行に最適',
+  platformLabel:'プラットフォーム', outputLabel:'出力言語',
+  globalOpt:'グローバル', asiaOpt:'アジア',
+  genBtn:'リスティング生成 →', copyBtn:'📋 コピー',
+  reviewLabel:'競合のレビューを貼り付け',
+  reviewPH:'競合のネガティブレビューを貼り付けてください。1行ずつ。\n\n例：\n3ヶ月でバッテリーが死んだ\n宣伝よりずっと重い',
+  analyzeBtn:'レビュー分析 →',
+  emailLabel:'顧客の状況を説明',
+  emailPH:'例：顧客が破損した製品を受け取り返金を希望している。\nまたは：顧客が50個のまとめ買い割引を依頼している。',
+  toneLabel:'トーン', toneProf:'プロフェッショナル', toneFriend:'フレンドリー', toneApolog:'謝罪',
+  writeBtn:'メール作成 →',
+  usageFree:'無料：', usageUsed:'/', usageUnlimited:'無制限：',
+  generating:'生成中...', errorGen:'エラーが発生しました', errorNet:'ネットワークエラー', toastDesc:'製品を説明してください', toastReview:'最低1件のレビューを入力', toastEmail:'状況を説明してください', toastLimit:'無料利用回数終了。$19/月で無制限。', toastCopy:'コピーしました！',
+  footer:'EcomAI — 無料AIツールキット', feedback:'フィードバック'
+},
+ko:{
+  heroTitle:'EcomAI', heroSub:'무료 AI 툴킷 — 모든 플랫폼, 모든 언어',
+  tab1:'📝 리스팅 생성', tab2:'🔍 리뷰 분석', tab3:'📧 고객 이메일',
+  listingLabel:'제품 설명',
+  listingPH:'제품을 명확하게 설명하세요 — 기능, 판매 포인트, 차별점.\n\n예: 20000mAh 보조배터리, 65W USB-C 고속충전, LED 디스플레이, 경쟁사 대비 30% 가벼움, 출장 여행에 최적',
+  platformLabel:'플랫폼', outputLabel:'출력 언어',
+  globalOpt:'글로벌', asiaOpt:'아시아',
+  genBtn:'리스팅 생성 →', copyBtn:'📋 복사',
+  reviewLabel:'경쟁사 리뷰 붙여넣기',
+  reviewPH:'경쟁사의 부정적 리뷰를 붙여넣으세요. 한 줄씩.\n\n예:\n배터리가 3개월 만에 죽었어요\n광고보다 훨씬 무거워요',
+  analyzeBtn:'리뷰 분석 →',
+  emailLabel:'고객 상황 설명',
+  emailPH:'예: 고객이 파손된 제품을 받고 환불을 원합니다.\n또는: 고객이 50개 대량 구매 할인을 문의합니다.',
+  toneLabel:'톤', toneProf:'전문적', toneFriend:'친근함', toneApolog:'사과',
+  writeBtn:'이메일 작성 →',
+  usageFree:'무료:', usageUsed:'/', usageUnlimited:'무제한:',
+  generating:'생성 중...', errorGen:'오류 발생', errorNet:'네트워크 오류', toastDesc:'제품을 설명해주세요', toastReview:'최소 하나의 리뷰를 입력하세요', toastEmail:'상황을 설명해주세요', toastLimit:'무료 사용 횟수 소진. $19/월 무제한.', toastCopy:'복사됨!',
+  footer:'EcomAI — 무료 AI 툴킷', feedback:'피드백'
+},
+fr:{
+  heroTitle:'EcomAI', heroSub:'Boîte à outils IA gratuite pour vendeurs — toute plateforme, toute langue',
+  tab1:'📝 Générateur Listing', tab2:'🔍 Analyse Avis', tab3:'📧 Email Client',
+  listingLabel:'Décrivez votre produit',
+  listingPH:'Décrivez votre produit — caractéristiques, arguments de vente, ce qui le différencie.\n\nExemple : Batterie externe 20000mAh avec charge rapide USB-C 65W, affichage LED, 30% plus légère, idéale pour les voyages',
+  platformLabel:'Plateforme', outputLabel:'Langue de sortie',
+  globalOpt:'Global', asiaOpt:'Asie',
+  genBtn:'Générer Listing →', copyBtn:'📋 Copier',
+  reviewLabel:'Collez les avis concurrents',
+  reviewPH:'Collez les avis négatifs des concurrents. Un par ligne.\n\nExemple :\nLa batterie est morte après 3 mois\nBeaucoup plus lourd que prévu',
+  analyzeBtn:'Analyser les Avis →',
+  emailLabel:'Décrivez la situation client',
+  emailPH:'Exemple : Le client a reçu un produit endommagé et souhaite un remboursement.\nOu : Le client demande une remise pour 50 unités.',
+  toneLabel:'Ton', toneProf:'Professionnel', toneFriend:'Amical', toneApolog:'D\'excuse',
+  writeBtn:'Rédiger Email →',
+  usageFree:'Gratuit :', usageUsed:'/', usageUnlimited:'Illimité :',
+  generating:'Génération...', errorGen:'Erreur. Réessayez.', errorNet:'Erreur réseau.', toastDesc:'Veuillez décrire votre produit', toastReview:'Veuillez entrer au moins un avis', toastEmail:'Veuillez décrire la situation', toastLimit:'Limite gratuite atteinte. 19\$/mois illimité.', toastCopy:'Copié !',
+  footer:'EcomAI — Boîte à outils IA gratuite', feedback:'Avis'
+}
+};
+
+function switchLang(lang){
+  localStorage.setItem('ecomai_lang',lang);
+  document.getElementById('langSelect').value=lang;
+  var t=i18n[lang];
+  // Hero
+  document.querySelector('.hero h1').textContent=t.heroTitle;
+  document.querySelector('.hero p').textContent=t.heroSub;
+  // Tabs
+  var tabs=document.querySelectorAll('.tab');
+  tabs[0].textContent=t.tab1; tabs[1].textContent=t.tab2; tabs[2].textContent=t.tab3;
+  // Listing
+  document.querySelector('#panel-listing label').textContent=t.listingLabel;
+  document.getElementById('listingInput').placeholder=t.listingPH;
+  document.querySelector('#panel-listing .btn-gold').textContent=t.genBtn;
+  document.querySelector('#panel-listing .btn-outline').textContent=t.copyBtn;
+  // Platform dropdown labels
+  var plat=document.getElementById('listingPlatform');
+  plat.querySelector('optgroup[label]').label=t.globalOpt;
+  plat.querySelectorAll('optgroup')[1].label=t.asiaOpt;
+  // Review
+  document.querySelector('#panel-review label').textContent=t.reviewLabel;
+  document.getElementById('reviewInput').placeholder=t.reviewPH;
+  document.querySelector('#panel-review .btn-gold').textContent=t.analyzeBtn;
+  document.querySelector('#panel-review .btn-outline').textContent=t.copyBtn;
+  // Email
+  document.querySelector('#panel-email label').textContent=t.emailLabel;
+  document.getElementById('emailInput').placeholder=t.emailPH;
+  document.querySelector('#panel-email .btn-gold').textContent=t.writeBtn;
+  document.querySelector('#panel-email .btn-outline').textContent=t.copyBtn;
+  // Tone dropdown
+  var ts=document.getElementById('emailTone').options;
+  ts[0].textContent=t.toneProf; ts[1].textContent=t.toneFriend; ts[2].textContent=t.toneApolog;
+  // Labels
+  var labels=document.querySelectorAll('.card .row label');
+  if(labels[0])labels[0].textContent=t.platformLabel;
+  if(labels[1])labels[1].textContent=t.outputLabel;
+  if(labels[2])labels[2].textContent=t.toneLabel;
+  if(labels[3])labels[3].textContent=t.outputLabel;
+  // Usage bar
+  document.querySelector('.usage-bar').innerHTML=t.usageFree+' <strong id="usageCount">'+getUsage()+'</strong> '+t.usageUsed+' '+FREE_LIMIT+' &nbsp;|&nbsp; '+t.usageUnlimited+' <strong>$19/mo</strong>';
+  // Footer
+  document.querySelector('.footer').innerHTML='EcomAI — '+t.footer.split(' — ')[1]+' &nbsp;|&nbsp; '+t.feedback+': <a href=\"mailto:1353379098@qq.com\">1353379098@qq.com</a>';
+  // Store current lang for toast messages
+  window._lang=lang;
+}
+function t(key){return (i18n[window._lang||'en']||i18n.en)[key]||key}
+
+// Init lang
+var savedLang=localStorage.getItem('ecomai_lang')||'en';
+document.getElementById('langSelect').value=savedLang;
+switchLang(savedLang);
+
+var DS_KEY = atob('c2stNDBjNjI5OWE2YWQyNDBiZjg3MGE5MDU0NmZhNzVhODI='); // Encoded key — move to backend for production
+var FREE_LIMIT = 5;
+
+function getUsage(){return parseInt(localStorage.getItem('ecomai_usage')||'0')}
+function addUsage(){var u=getUsage()+1;localStorage.setItem('ecomai_usage',u);document.getElementById('usageCount').textContent=u;updateUsageBar();return u}
+function updateUsageBar(){var lang=window._lang||'en';var t2=i18n[lang];document.querySelector('.usage-bar').innerHTML=t2.usageFree+' <strong id=\"usageCount\">'+getUsage()+'</strong> '+t2.usageUsed+' '+FREE_LIMIT+' &nbsp;|&nbsp; '+t2.usageUnlimited+' <strong>$19/mo</strong>';}
+document.getElementById('usageCount').textContent=getUsage();
+function checkLimit(){return getUsage()<FREE_LIMIT}
+
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+  event.target.classList.add('active');
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
+  document.getElementById('panel-'+name).classList.add('active');
+}
+
+async function callAI(prompt,outputId,copyBarId){
+  if(!checkLimit()){toast(t('toastLimit'));return}
+  var out=document.getElementById(outputId);
+  out.className='output-box show';out.textContent=t('generating');
+  try{
+    var r=await fetch('https://api.deepseek.com/v1/chat/completions',{
+      method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+DS_KEY},
+      body:JSON.stringify({model:'deepseek-chat',messages:[{role:'user',content:prompt}],max_tokens:1500,temperature:0.7})
+    });
+    if(r.ok){var j=await r.json();
+      if(j.choices){out.textContent=(j.choices[0].message.content||'').replace(/\*\*/g,'').trim();addUsage();document.getElementById(copyBarId).classList.add('show');return}
+    }
+    out.textContent=t('errorGen');
+  }catch(e){out.textContent=t('errorNet')}
+}
+
+function genListing(){
+  var desc=document.getElementById('listingInput').value.trim();
+  if(!desc||desc.length<5){toast(t('toastDesc'));return}
+  var plat=document.getElementById('listingPlatform').value;
+  var lang=document.getElementById('listingLang').value;
+  var platNames={amazon:'Amazon',shopify:'Shopify',etsy:'Etsy',ebay:'eBay',taobao:'Taobao/Tmall',jd:'JD.com',shopee:'Shopee',lazada:'Lazada'};
+  var langNames={en:'English',zh:'Chinese',es:'Spanish',de:'German',ja:'Japanese',ko:'Korean'};
+  var prompt='You are an expert e-commerce copywriter. Write a complete product listing in '+langNames[lang]+' for '+platNames[plat]+
+    '.\n\nProduct:\n'+desc+
+    '\n\nOutput:\n**Title** (SEO-optimized)\n**5 Selling Points** (benefit-focused)\n**Product Description** (1 engaging paragraph)\n**Search Keywords** (7 terms)\n\nWrite in '+langNames[lang]+'.';
+  callAI(prompt,'listingOutput','listingCopyBar');
+}
+
+function genReview(){
+  var input=document.getElementById('reviewInput').value.trim();
+  if(!input||input.length<3){toast(t('toastReview'));return}
+  var prompt='Analyze these negative product reviews:\n'+input.substring(0,2000)+
+    '\n\nOutput in Chinese:\n**Top 3 Pain Points** (what customers hate most)\n**Specific Fixes** (how to improve each)\n**Your Competitive Edge** (how to beat competitors on these issues)\n\nBe specific and actionable.';
+  callAI(prompt,'reviewOutput','reviewCopyBar');
+}
+
+function genEmail(){
+  var scene=document.getElementById('emailInput').value.trim();
+  if(!scene||scene.length<5){toast(t('toastEmail'));return}
+  var tone=document.getElementById('emailTone').value;
+  var lang=document.getElementById('emailLang').value;
+  var langNames={zh:'Chinese',en:'English',es:'Spanish',de:'German',fr:'French'};
+  var prompt='Write a customer service email in '+langNames[lang]+'. Tone: '+tone+'. Situation: '+scene+
+    '\n\nOutput:\n**Subject** (email subject)\n**Body** (2-3 paragraphs, warm and professional)\n\nWrite in '+langNames[lang]+'.';
+  callAI(prompt,'emailOutput','emailCopyBar');
+}
+
+function copyText(id){
+  navigator.clipboard.writeText(document.getElementById(id).textContent).then(function(){toast(t('toastCopy'))});
+}
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._tid);t._tid=setTimeout(function(){t.classList.remove('show')},2000)}
+</script>
+</body>
+</html>
