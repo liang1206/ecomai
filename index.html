@@ -380,6 +380,8 @@ switchLang(savedLang);
 var DS_KEY = atob('c2stNDBjNjI5OWE2YWQyNDBiZjg3MGE5MDU0NmZhNzVhODI=');
 var IMG_KEY = atob('c2stYTQ0YTh1OGIwYjhhNGIxZGJmMmM4ZWZiZWRiNWY0NWQ=');
 var TRYON_KEY = atob('c2stNGU0OWJhM2Y3MmU4NDkxZjhiMzkzOGE0NGRjOThlNjQ=');
+var GH_TOKEN = atob('');  // ← 填入 GitHub token 的 base64: btoa('ghp_xxxxxxxxxxxx')
+var GH_REPO = 'liang1206/ecomai';
 var FREE_LIMIT = 5;
 
 function getUsage(){return parseInt(localStorage.getItem('ecomai_usage')||'0')}
@@ -433,29 +435,55 @@ function genReview(){
 }
 
 // ===== VIRTUAL TRY-ON =====
+async function uploadToGitHub(file){
+  return new Promise(function(resolve, reject){
+    var reader = new FileReader();
+    reader.onload = function(){
+      var base64 = reader.result.split(',')[1];
+      var ext = file.name.split('.').pop() || 'png';
+      var fname = 'tryon_' + Date.now() + '_' + Math.random().toString(36).slice(2,8) + '.' + ext;
+      fetch('https://api.github.com/repos/' + GH_REPO + '/contents/uploads/' + fname, {
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer ' + GH_TOKEN,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: 'Upload try-on image',
+          content: base64,
+          branch: 'main'
+        })
+      }).then(function(r){
+        if(!r.ok) return r.json().then(function(e){ reject('GitHub upload failed: ' + (e.message || r.status)) });
+        return r.json();
+      }).then(function(data){
+        // Use raw GitHub CDN URL
+        resolve('https://raw.githubusercontent.com/' + GH_REPO + '/main/uploads/' + fname);
+      }).catch(reject);
+    };
+    reader.onerror = function(){ reject('Failed to read file') };
+    reader.readAsDataURL(file);
+  });
+}
+
 async function genTryon(){
   var pFile=document.getElementById('tryonPerson').files[0];
   var gFile=document.getElementById('tryonGarment').files[0];
   if(!pFile||!gFile){toast('Please upload both model and clothing photos');return}
   if(!checkLimit()){toast(t('toastLimit'));return}
   var out=document.getElementById('tryonOutput');
-  out.className='output-box show';out.textContent='Uploading images...';
+  out.className='output-box show';out.textContent='Uploading images to GitHub...';
 
   try{
-    // Upload images to get public URLs (Aitryon API requires URLs)
-    var fd1=new FormData();fd1.append('file',pFile);
-    var r1=await fetch('https://umxai.cn/api/upload/image',{method:'POST',body:fd1});
-    var u1=await r1.json();
-    var fd2=new FormData();fd2.append('file',gFile);
-    var r2=await fetch('https://umxai.cn/api/upload/image',{method:'POST',body:fd2});
-    var u2=await r2.json();
-    if(!u1.url||!u2.url){out.textContent='Upload failed — try again or use smaller images';return}
+    // Upload both images to GitHub for public URLs
+    var u1 = await uploadToGitHub(pFile);
+    var u2 = await uploadToGitHub(gFile);
 
     out.textContent='Generating try-on... (this takes ~90 seconds)';
     var gType=document.getElementById('tryonType').value;
-    var input={person_image_url:u1.url};
-    if(gType==='top'||gType==='dress')input.top_garment_url=u2.url;
-    if(gType==='bottom')input.bottom_garment_url=u2.url;
+    var input={person_image_url:u1};
+    if(gType==='top'||gType==='dress')input.top_garment_url=u2;
+    if(gType==='bottom')input.bottom_garment_url=u2;
 
     // Submit async task
     var taskR=await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/image2image/image-synthesis/',{
